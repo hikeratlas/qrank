@@ -1,0 +1,21 @@
+name: Publish QRank DB
+
+on: 
+  push:
+    branches: [main]
+
+  pull_request: 
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      - name: Create DB
+        run: ./create-qrank-db
+
+      # TODO: overwrite the existing release's binary with the new file
