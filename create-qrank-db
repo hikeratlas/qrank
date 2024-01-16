@@ -37,7 +37,7 @@ vacuum;
 EOF
 }
 
-ensure_qrank_csv
+time ensure_qrank_csv
 
 rm -f qrank.db
-do_the_thing | sqlite3 qrank.db
+time ( do_the_thing | sqlite3 qrank.db )

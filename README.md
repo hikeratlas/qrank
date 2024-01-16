@@ -7,3 +7,4 @@ They publish the dataset as a gzipped CSV file, [qrank.csv.gz](https://qrank.wmc
 This repository republishes the data as a SQLite database with an index, so that random-access queries are fast.
 
 You can download [qrank.db here](https://github.com/hikeratlas/qrank/releases/download/latest/qrank.db).
+
