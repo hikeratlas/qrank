@@ -19,4 +19,6 @@ jobs:
       #        run: ./create-qrank-db
 
       - name: Publish DB
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./publish-qrank-db
