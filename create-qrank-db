@@ -1,0 +1,43 @@
+#!/bin/bash
+set -euo pipefail
+
+# Create a SQLite DB of QRank scores.
+#
+# The data will be fetched from https://qrank.wmcloud.org/download/qrank.csv.gz if
+# needed.
+#
+# The DB has a single table `qrank` with columns `id` and `qrank`, eg:
+#
+# $ echo 'select * from qrank limit 1' | sqlite3 ./qrank.db -table
+# +----+---------+
+# | id |  qrank  |
+# +----+---------+
+# | 1  | 4608893 |
+# +----+---------+
+
+ensure_qrank_csv() {
+	if [ -e qrank.csv ]; then
+		return
+	fi
+
+	echo need to fetch
+	rm -f qrank.csv.gz
+	wget https://qrank.wmcloud.org/download/qrank.csv.gz -O qrank.csv.gz
+	gunzip qrank.csv.gz
+}
+
+do_the_thing() {
+	cat <<EOF
+.mode csv
+.import qrank.csv qrank_raw
+create table qrank(id integer not null primary key, qrank integer not null);
+insert into qrank(id, qrank) select substr(Entity, 2), QRank FROM qrank_raw;
+drop table qrank_raw;
+vacuum;
+EOF
+}
+
+ensure_qrank_csv
+
+rm -f qrank.db
+do_the_thing | sqlite3 qrank.db
